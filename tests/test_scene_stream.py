@@ -72,11 +72,7 @@ def test_full_roundtrip(test_file, version):
 
 # Temporarily add test files here that add new data fields before updating the
 # parsing code properly.
-FULL_PARSING_XFAILS = [
-    # The image blocks parse fully. SceneInfo gained fields in 3.27 that are
-    # not decoded yet, so that block still keeps extra_data.
-    "Image_v3.28.rm",
-]
+FULL_PARSING_XFAILS: list[str] = []
 
 TEST_FILES_FOR_FULL_PARSING = [
     pytest.param(
@@ -719,3 +715,18 @@ def test_image_item_blocks_are_fully_parsed():
     assert items
     for block in items:
         assert not block.extra_value_data
+
+
+def test_unreadable_block_keeps_its_versions():
+    # A block type this version does not know is written back with the
+    # versions found in the file, not the default (1, 1).
+    data_hex = """
+    04000000 00020363
+    1f 0219 01
+    """
+    buf = BytesIO(HEADER_V6 + bytes.fromhex(data_hex))
+    blocks = list(read_blocks(buf))
+    assert isinstance(blocks[0], UnreadableBlock)
+    out = BytesIO()
+    write_blocks(out, blocks)
+    assert out.getvalue() == HEADER_V6 + bytes.fromhex(data_hex)
