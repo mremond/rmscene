@@ -228,3 +228,10 @@ class TaggedBlockWriter:
             self.write_id(1, value.timestamp)
             with self.write_subblock(2):
                 self.data.write_bool(value.value)
+
+    def write_lww_subblock_byte(self, index: int, value: LwwValue[int]):
+        """Write a LWW byte where the value is wrapped in a subblock."""
+        with self.write_subblock(index):
+            self.write_id(1, value.timestamp)
+            with self.write_subblock(2):
+                self.data.write_uint8(value.value)
