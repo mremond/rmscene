@@ -753,9 +753,9 @@ def test_scene_info_field_9_is_a_byte():
 
 def test_scene_info_without_paper_size_round_trips():
     # Firmware 3.27 can write SceneInfo without paper_size (field 5), going on
-    # with newer fields. rmscene itself wrote such blocks but failed to read
+    # with other fields. rmscene itself wrote such blocks but failed to read
     # them back.
-    newer = bytes.fromhex("6c 00000000")  # an empty field 6
+    newer = bytes.fromhex("ac 00000000")  # an empty field 10, unknown here
     block = SceneInfo(
         current_layer=LwwValue(CrdtId(0, 0), CrdtId(0, 0)),
         background_visible=LwwValue(CrdtId(0, 0), True),
