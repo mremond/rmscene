@@ -17,6 +17,7 @@ New features:
 Fixes:
 
 - Keep paragraph style codes this version does not know when writing a file back, instead of replacing them with `PLAIN`
+- Keep undecoded fields of paragraph style data (written by recent firmware for some headings) in `Text.style_extra_data`, so they survive a read/write round trip
 
 ### v0.8.0
   
