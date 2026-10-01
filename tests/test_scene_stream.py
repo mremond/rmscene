@@ -730,3 +730,22 @@ def test_unreadable_block_keeps_its_versions():
     out = BytesIO()
     write_blocks(out, blocks)
     assert out.getvalue() == HEADER_V6 + bytes.fromhex(data_hex)
+
+
+def test_scene_info_field_9_is_a_byte():
+    # Device pages carry 1 or 2 in SceneInfo field 9: a value of 2 must be
+    # written back as 2.
+    block = SceneInfo(
+        current_layer=LwwValue(CrdtId(0, 0), CrdtId(0, 0)),
+        background_visible=LwwValue(CrdtId(0, 0), True),
+        root_document_visible=LwwValue(CrdtId(0, 0), True),
+        paper_size=(1620, 2160),
+        viewport=LwwValue(CrdtId(0, 0), (0.0, 0.0, 0.0, 0.0)),
+        paper_size_raw=(1620.0, 2160.0),
+        paper_size_lww=LwwValue(CrdtId(1, 15), (1620.0, 2160.0)),
+        unknown_byte_9=LwwValue(CrdtId(0, 14), 2),
+    )
+    buf = BytesIO()
+    block.write(TaggedBlockWriter(buf))
+    buf.seek(0)
+    assert Block.read(TaggedBlockReader(buf)) == block

@@ -153,7 +153,8 @@ class SceneInfo(Block):
     viewport: tp.Optional[LwwValue[tuple[float, float, float, float]]] = None
     paper_size_raw: tp.Optional[tuple[float, float]] = None
     paper_size_lww: tp.Optional[LwwValue[tuple[float, float]]] = None
-    unknown_bool_9: tp.Optional[LwwValue[bool]] = None
+    # Seen as 1 and 2 on device pages: a byte, not a bool.
+    unknown_byte_9: tp.Optional[LwwValue[int]] = None
 
     @classmethod
     def from_stream(cls, stream: TaggedBlockReader) -> SceneInfo:
@@ -166,7 +167,7 @@ class SceneInfo(Block):
         viewport = None
         paper_size_raw = None
         paper_size_lww = None
-        unknown_bool_9 = None
+        unknown_byte_9 = None
         if stream.bytes_remaining_in_block() > 0 and stream.has_subblock(6):
             viewport = stream.read_lww_double_rect(6)
         if stream.bytes_remaining_in_block() > 0 and stream.has_subblock(7):
@@ -174,7 +175,7 @@ class SceneInfo(Block):
         if stream.bytes_remaining_in_block() > 0 and stream.has_subblock(8):
             paper_size_lww = stream.read_lww_double_pair(8)
         if stream.bytes_remaining_in_block() > 0 and stream.has_subblock(9):
-            unknown_bool_9 = stream.read_lww_subblock_bool(9)
+            unknown_byte_9 = stream.read_lww_subblock_byte(9)
 
         return SceneInfo(current_layer=current_layer,
                          background_visible=background_visible,
@@ -183,7 +184,7 @@ class SceneInfo(Block):
                          viewport=viewport,
                          paper_size_raw=paper_size_raw,
                          paper_size_lww=paper_size_lww,
-                         unknown_bool_9=unknown_bool_9)
+                         unknown_byte_9=unknown_byte_9)
 
     def to_stream(self, writer: TaggedBlockWriter):
         writer.write_lww_id(1, self.current_layer)
@@ -199,8 +200,8 @@ class SceneInfo(Block):
             writer.write_double_pair(7, self.paper_size_raw)
         if self.paper_size_lww is not None:
             writer.write_lww_double_pair(8, self.paper_size_lww)
-        if self.unknown_bool_9 is not None:
-            writer.write_lww_subblock_bool(9, self.unknown_bool_9)
+        if self.unknown_byte_9 is not None:
+            writer.write_lww_subblock_byte(9, self.unknown_byte_9)
 
 
 @dataclass
