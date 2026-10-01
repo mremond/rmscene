@@ -29,6 +29,7 @@ New features:
 
 Fixes:
 
+- Read `SceneInfo` fields 2, 3 and 5 only when present, so that blocks without `paper_size` (written by firmware 3.27, and by rmscene itself) can be read
 - Keep paragraph style codes this version does not know when writing a file back, instead of replacing them with `PLAIN`
 - Keep undecoded fields of paragraph style data (written by recent firmware for some headings) in `Text.style_extra_data`, so they survive a read/write round trip
 - Write blocks that could not be read back with the versions found in the file, not `(1, 1)`
