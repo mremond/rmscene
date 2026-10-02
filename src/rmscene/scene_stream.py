@@ -724,16 +724,15 @@ def text_format_from_stream(
         # Field 1 is the style. Recent firmware may add more fields after it,
         # not decoded yet: they are kept as they are.
         format_code = stream.read_byte(1)
-        try:
-            format_type = si.ParagraphStyle(format_code)
-        except ValueError:
+        format_type = si.ParagraphStyle(format_code)
+        if format_type.name.startswith("UNKNOWN_"):
+            # Kept as is, and written back unchanged.
             _logger.warning("Unrecognised text format code %d.", format_code)
             _logger.debug(
                 "Unrecognised text format code %d at position %d.",
                 format_code,
                 stream.data.tell(),
             )
-            format_type = si.ParagraphStyle.PLAIN  # fallback
 
     return (char_id, LwwValue(timestamp, format_type), block_info.extra_data)
 
