@@ -13,6 +13,7 @@ To convert rm files to other formats, you can use [rmc](https://github.com/rickl
 New features:
 
 - Add `ParagraphStyle.NUMBERED` (style code 10, used for numbered lists by recent firmware)
+- Add `ParagraphStyle.NUMBERED_NESTED` (style code 11, numbered list items below the first level) and decode the optional fields recent firmware writes after a paragraph style into `Text.style_fields` (`ParagraphStyleFields`, with the list nesting level as `list_level`)
 
 Fixes:
 
