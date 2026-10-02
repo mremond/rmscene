@@ -233,6 +233,13 @@ class TaggedBlockWriter:
                 self.data.write_float64(value.value[2])
                 self.data.write_float64(value.value[3])
 
+    def write_lww_subblock_bool(self, index: int, value: LwwValue[bool]):
+        """Write a LWW bool where the value is wrapped in a subblock."""
+        with self.write_subblock(index):
+            self.write_id(1, value.timestamp)
+            with self.write_subblock(2):
+                self.data.write_bool(value.value)
+
     def write_lww_subblock_byte(self, index: int, value: LwwValue[int]):
         """Write a LWW byte where the value is wrapped in a subblock."""
         with self.write_subblock(index):

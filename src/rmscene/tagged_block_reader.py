@@ -419,6 +419,14 @@ class TaggedBlockReader:
                 h = self.data.read_float64()
         return LwwValue(timestamp, (x, y, w, h))
 
+    def read_lww_subblock_bool(self, index: int) -> LwwValue[bool]:
+        """Read a LWW bool where the value is wrapped in a subblock."""
+        with self.read_subblock(index):
+            timestamp = self.read_id(1)
+            with self.read_subblock(2):
+                value = self.data.read_bool()
+        return LwwValue(timestamp, value)
+
     def read_lww_subblock_byte(self, index: int) -> LwwValue[int]:
         """Read a LWW byte where the value is wrapped in a subblock."""
         with self.read_subblock(index):

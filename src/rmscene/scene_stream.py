@@ -153,7 +153,6 @@ class SceneInfo(Block):
     viewport: tp.Optional[LwwValue[tuple[float, float, float, float]]] = None
     paper_size_raw: tp.Optional[tuple[float, float]] = None
     paper_size_lww: tp.Optional[LwwValue[tuple[float, float]]] = None
-    # Seen as 1 and 2 on device pages: a byte, not a bool.
     unknown_byte_9: tp.Optional[LwwValue[int]] = None
 
     @classmethod
